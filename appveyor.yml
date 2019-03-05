@@ -35,4 +35,4 @@ on_finish:
       try { $webclient.UploadFile($url, (Resolve-Path $file)) } catch { $_ }
 cache:
   - C:\ant
-- C:\ivy
+  - C:\ivy
