@@ -1,34 +1,30 @@
-version: build {build} {branch}
-
-os: Visual Studio 2015
-
-clone_depth: 1
-
+version: '{build}'
+skip_tags: true
+clone_depth: 10
+environment:
+  MAVEN_VERSION: 3.5.0
+  matrix:
+    - JAVA_HOME: C:\Program Files\Java\jdk1.7.0
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+    - JAVA_HOME: C:\Program Files\Java\jdk9
 install:
   - ps: |
       Add-Type -AssemblyName System.IO.Compression.FileSystem
-      if (!(Test-Path -Path "C:\ant\apache-ant-1.9.9" )) {
-        (new-object System.Net.WebClient).DownloadFile(
-        'https://archive.apache.org/dist/ant/binaries/apache-ant-1.9.9-bin.zip',
-          'C:\ant-bin.zip'
-        )
-        [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\ant-bin.zip", "C:\ant")
+      if (!(Test-Path -Path "C:\maven" )) {
+        Write-Host "Downloading Maven $env:MAVEN_VERSION"
+        (new-object System.Net.WebClient).DownloadFile("https://repo1.maven.org/maven2/org/apache/maven/apache-maven/$env:MAVEN_VERSION/apache-maven-$env:MAVEN_VERSION-bin.zip", 'C:\maven-bin.zip')
+        [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\maven-bin.zip", "C:\maven")
       }
-  - cmd: SET PATH=C:\ant\apache-ant-1.9.9\bin;%JAVA_HOME%\bin;%PATH%
-  - cmd: SET IVY_CACHE_DIR=C:\ivy
-  - cmd: echo %USERPROFILE%
-  - cmd: echo %PATH%
+  - cmd: SET M2_HOME=C:\maven\apache-maven-%MAVEN_VERSION%
+  # Prepend Java entry, remove Ruby entry (C:\Ruby193\bin;) from PATH
+  - cmd: SET PATH=%M2_HOME%\bin;%JAVA_HOME%\bin;%PATH:C:\Ruby193\bin;=%;
+  # `https.protocols` is required by Java7 since June 18 because TSL 1.0 & 1.1 support was removed
+  - cmd: SET MAVEN_OPTS=-XX:MaxPermSize=1g -Xmx2g -Dhttps.protocols=TLSv1.2
+  - cmd: SET JAVA_OPTS=-XX:MaxPermSize=1g -Xmx2g
+  - cmd: mvn --version
   - cmd: java -version
-
 build_script:
-  - ant build
-
-test_script:
-  - ant unit-tests
-
-on_finish:
-  - ps: |
-
+  - mvn -B -V -Prun-its clean verify
 cache:
-  - C:\ant
-  - C:\ivy
+  - C:\maven\ -> appveyor.yml
+  - C:\Users\appveyor\.m2\ -> pom.xml
