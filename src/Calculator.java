@@ -1,3 +1,5 @@
+import org.junit.Test;
+
 import java.util.Scanner;
 public class Calculator {
     public static void main(String[] args)
@@ -7,7 +9,6 @@ public class Calculator {
         int num1,num2;
         num1 = inp.nextInt();
         num2 = inp.nextInt();
-        int ans;
         System.out.println("1 pour addition, 2 pour soustraction :");
         int choose;
         choose = inp.nextInt();
