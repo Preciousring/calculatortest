@@ -23,8 +23,28 @@ install:
   - cmd: SET JAVA_OPTS=-XX:MaxPermSize=1g -Xmx2g
   - cmd: mvn --version
   - cmd: java -version
+
+before_build:
+- nuget restore
+- choco install opencover.portable
+- choco install codecov
+
+build:
+  project: CodecovExample.sln
+verbosity: minimal
+
 build_script:
   - mvn -B -V -Prun-its clean verify
+
+script: "mvn cobertura:cobertura"
+
+test_script:
+- OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\test\CodecovExample.Tests\bin\Debug\CodecovExample.Tests.dll -noshadow" -filter:"+[CodecovExample.TargetProject*]* -[CodecovExample.Tests*]*" -output:".\CodecovExample-FSharp.xml"
+- codecov -f "CodecovExample-FSharp.xml"
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+
 cache:
   - C:\maven\ -> appveyor.yml
   - C:\Users\appveyor\.m2\ -> pom.xml
