@@ -19,6 +19,6 @@ test_script:
 
     codecov -f .\ConvertedReport.xml -X gcov
 
-    
+
     
     bash <(curl -s https://codecov.io/bash)
