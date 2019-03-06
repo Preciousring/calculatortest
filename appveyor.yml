@@ -27,7 +27,7 @@ test_script:
 notifications:
   - provider: Slack
     incoming_webhook:
-      secure: xoxp-568583989971-567957788080-570147804726-7f5ce2269fe80897b126c408a5180f12
+      secure: 9Ri1OsfFBPhLLh9T4kYtbOhVM3k2fxyfRw4gVNTOFScKUXxEca+2mVKS4tQX8k1ZOsKRwH30dq3a/sDCG3xM0ZXOeFQ50CMG/F30VN0TdL4=
     on_build_success: true
     on_build_failure: true
     on_build_status_changed: true
