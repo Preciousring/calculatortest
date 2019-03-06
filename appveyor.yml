@@ -36,13 +36,9 @@ build:
 build_script:
   - mvn -B -V -Prun-its clean verify
 
-
 test_script:
   - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:".\test\CodecovExample.Tests\bin\Debug\CodecovExample.Tests.dll -noshadow" -filter:"+[CodecovExample.TargetProject*]* -[CodecovExample.Tests*]*" -output:".\CodecovExample-FSharp.xml"
   - codecov -f "CodecovExample-FSharp.xml"
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
 
 cache:
   - C:\maven\ -> appveyor.yml
