@@ -22,3 +22,13 @@ test_script:
 
     
     bash <(curl -s https://codecov.io/bash)
+
+
+notifications:
+  - provider: Slack
+    incoming_webhook:
+      secure: xoxp-568583989971-567957788080-570147804726-7f5ce2269fe80897b126c408a5180f12
+    on_build_success: true
+    on_build_failure: true
+    on_build_status_changed: true
+
