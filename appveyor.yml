@@ -3,12 +3,22 @@ image: Visual Studio 2015
 build_script:
 - cmd: >-
     mvn clean install
+
+
     mvn cobertura:cobertura
 test_script:
 - cmd: >-
     mvn --version
+
+
     mvn test
+
+
     pip install codecov
+
+
     codecov -f .\ConvertedReport.xml -X gcov
+
+    
     
     bash <(curl -s https://codecov.io/bash)
